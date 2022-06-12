@@ -4,6 +4,8 @@
 You can set these values by giving command-line arguments like argparse, not modifying this configuration file directly.
 For the detailed description, please refer [here](https://github.com/khanrc/sconf#cli-modification).
 
+LFfont는 페이즈1 페이즈2 학습을 진행함 ( 학습 스테이지가 2개임 )
+
 ---
 - **use_ddp**:  Whether to use DataDistributedParallel. Set True to this to use multi-gpu.
 - **port**: The port for the DataDistributedParallel training.
