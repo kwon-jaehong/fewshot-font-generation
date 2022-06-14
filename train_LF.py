@@ -180,6 +180,7 @@ def train_ddp(gpu, args, cfg):
 
 def train_single(args, cfg):
     cfg.trainer.rank = 0
+    ## 여기서 에러
     trn_loader, val_loaders, trainer = build_trainer(args, cfg)
     trainer.train(trn_loader, val_loaders, cfg.max_iter)
 
@@ -194,11 +195,15 @@ def main():
     parser.add_argument("-p", "--port", type=int, default=13481, help="port for DDP")
     parser.add_argument("--verbose", type=bool, default=True)
     args, left_argv = parser.parse_known_args()
+    
     args.world_size = args.gpus_per_node * args.nodes
 
     cfg = setup_train_config(args, left_argv)
+    
+    
     cfg = setup_train_dset(cfg)
 
+    
     np.random.seed(cfg.seed)
     torch.manual_seed(cfg.seed)
 

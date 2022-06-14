@@ -32,9 +32,7 @@ trainer:
   print_freq: 1
   val_freq: 200
   save_freq: 400
-  ## 텐서보드 업데이트
   tb_freq: 100
-
 
 # Generator
 gen:
@@ -43,7 +41,7 @@ gen:
 # Dataloader
 dset:
   loader:
-    batch_size: 4
+    batch_size: 1
     num_workers: 8
   train:
     n_in_s: 3

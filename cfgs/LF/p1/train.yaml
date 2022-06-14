@@ -1,5 +1,5 @@
-decomposition: data/chn/decomposition.json
-primals: data/chn/primals.json
+decomposition: data/kor/decomposition.json
+primals: data/kor/primals.json
 
 trainer:
   resume:
@@ -7,6 +7,6 @@ trainer:
 
 dset:
   train:
-    source_path: data/chn/source.ttf
+    source_path: data/kor/source.ttf
     source_ext: ttf
   

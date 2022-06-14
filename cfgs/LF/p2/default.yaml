@@ -29,9 +29,9 @@ trainer:
   fact_const_w: 1.
   # Display
   save: all-last
-  print_freq: 1000
-  val_freq: 10000
-  save_freq: 50000
+  print_freq: 1
+  val_freq: 200
+  save_freq: 200
   tb_freq: 100
 
 # Generator
@@ -42,4 +42,4 @@ gen:
 dset:
   loader:
     batch_size: 1
-    num_workers: 16
+    num_workers: 8

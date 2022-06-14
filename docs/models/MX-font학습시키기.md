@@ -1,0 +1,1 @@
+python train_MX.py cfgs/MX/train.yaml kor_train/kor_train.yaml --work_dir ./temp2

@@ -15,6 +15,7 @@ def setup_train_config(args, left_argv={}):
     cfg = Config(*args.config_paths,
                  default=default_config_path,
                  colorize_modified_item=True)
+    
     cfg.argv_update(left_argv)
     cfg.use_ddp = (args.world_size > 1)
 
