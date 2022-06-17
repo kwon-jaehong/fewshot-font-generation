@@ -15,9 +15,26 @@ from base.modules import ParamBlock
 class Generator(nn.Module):
     def __init__(self, n_comps, emb_dim):
         super().__init__()
+        
         self.comp_enc = ComponentEncoder(n_comps)
+        
+        # print("컴포넌트 인코더 차원?",n_comps)
+        ## 24
+        
+        # print("인코더 모델",self.comp_enc)
+        
+        
         self.feat_shape = self.comp_enc.get_feat_shape()
+        # print("피쳐 쉐이프",self.feat_shape)
+        # 피쳐 쉐이프 {'last': (256, 16, 16), 'skip': (128, 32, 32)}
+        
+        ## self.memory
         self.memory = {k: Memory() for k in self.feat_shape}
+        
+        
+        # print(self.memory)
+        ## {'last': Memory(), 'skip': Memory()}
+
 
         if emb_dim:
             self.style_emb_blocks = {}
@@ -33,6 +50,7 @@ class Generator(nn.Module):
 
         self.content_enc = ContentEncoder()
         self.decoder = Decoder()
+
 
     def reset_memory(self):
         for _key in self.feat_shape:
@@ -86,10 +104,11 @@ class Generator(nn.Module):
 
         return ret["last"]
 
+    ## 폰트스타일 라벨링 아이디, decs, 이미지 넣음
     def encode_write_comb(self, fids, decs, imgs, reset_memory=True):
         if reset_memory:
             self.reset_memory()
-
+        
         feats = self.comp_enc(imgs, decs)  # [B, 3, C, H, W]
 
         for _key in self.feat_shape:
@@ -129,10 +148,18 @@ class Generator(nn.Module):
 
         return out
 
+    
     def decode(self, feats, src_imgs):
         content_feats = self.content_enc(src_imgs)
+        
+        ## content_feats는
+        ## torch.Size([20, 256, 16, 16])
+        ## 콘텐츠를 인코더로한 특징
+        
+        
         out = self.decoder(content_feats=content_feats, **feats)
-
+        ## torch.Size([20, 1, 128, 128]) 
+        
         return out
 
     def infer(self, ref_fids, ref_decs, ref_imgs, trg_fids, trg_decs, src_imgs,

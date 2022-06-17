@@ -21,7 +21,7 @@ def d_crit(reals, fakes):
 
     return loss
 
-
+## L1 평균 
 def fm_crit(reals, fakes):
     losses = [F.l1_loss(r.detach(), f) for r, f in zip(reals, fakes)]
     loss = sum(losses) / len(reals)

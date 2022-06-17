@@ -163,6 +163,8 @@ class Memory(nn.Module):
     def write_point_comb(self, style_id, comp_id, sc_feat):
         self.comb_memory.write_point(style_id, comp_id, sc_feat)
 
+
+
     def read_char_both(self, style_id, comp_id_char, reduction='mean'):
         sc_feat = []
         for comp_id in comp_id_char:
@@ -175,6 +177,8 @@ class Memory(nn.Module):
         sc_feat = torch.stack(sc_feat)
         return sc_feat
 
+    
+    
     def read_chars(self, style_ids, comp_ids, reduction='mean', type="both"):
         sc_feats = []
         read_funcs = {"both": self.read_char_both,

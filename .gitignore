@@ -4,3 +4,4 @@ temp/*
 __pycache__/*
 temp2/*
 .vscode/*
+*.onnx*

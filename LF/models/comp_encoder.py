@@ -28,7 +28,7 @@ class ComponentEncoder(nn.Module):
         super().__init__()
         ConvBlk = partial(ConvBlock, norm="in", activ="relu", pad_type="zero")
         ResBlk = partial(ResBlock, norm="in", activ="relu", pad_type="zero", scale_var=False)
-
+        
         C = 32
         self.layers = nn.ModuleList([
             ConvBlk(1, C, 3, 1, 1, norm='none', activ='none'),  # 128x128

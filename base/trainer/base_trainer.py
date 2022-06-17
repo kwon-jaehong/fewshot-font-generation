@@ -72,6 +72,7 @@ class BaseTrainer:
 
         return loss_dic
 
+    ## em
     def accum_g(self, decay=0.999):
         par1 = dict(self.gen_ema.named_parameters())
         par2 = dict(self.gen.named_parameters())
@@ -128,7 +129,6 @@ class BaseTrainer:
         loss = self.add_loss(
             (out, target), self.g_losses, "pixel", self.cfg["pixel_w"], F.l1_loss
         )
-
         return loss
 
     def add_gan_g_loss(self, *fakes):
