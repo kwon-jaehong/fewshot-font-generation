@@ -80,9 +80,7 @@ class LF1Trainer(BaseTrainer):
                 decomposition = json.load(f)
             ## 삭제해도 됨
             
-            ## ref_decs는 뜻을 모르겠음
-
-            
+            ## ref_decs는 뜻을 모르겠음            
 
             trg_imgs = batch["trg_imgs"].cuda()
             trg_fids = batch["trg_fids"].cuda()            
@@ -149,7 +147,7 @@ class LF1Trainer(BaseTrainer):
             ## 참조 이미지를 인코더함            
             sc_feats = self.gen.encode_write_comb(ref_fids, ref_decs, ref_imgs)
             
-            
+
             ## torch.Size([20, 1, 128, 128])
             gen_imgs = self.gen.read_decode(trg_fids, trg_decs, src_imgs, phase="comb")
             
@@ -159,6 +157,7 @@ class LF1Trainer(BaseTrainer):
             real_font, real_uni, *real_feats = self.disc(
                 trg_imgs, trg_fids, trg_cids, out_feats=self.cfg['fm_layers']
             )
+
 
             ## 모델 저장
             # import torch.onnx

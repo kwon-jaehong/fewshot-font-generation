@@ -4,12 +4,13 @@
     // 자세한 내용을 보려면 https://go.microsoft.com/fwlink/?linkid=830387을(를) 방문하세요.
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "args": ["cfgs/LF/p1/train.yaml","kor_train/kor_train.yaml","--phase","1","--work_dir","./temp/outputs"],
+            // "args": ["cfgs/LF/p1/train.yaml","kor_train/kor_train.yaml","--phase","1","--work_dir","./temp/outputs"],
             "console": "integratedTerminal",
             "justMyCode": true
         }

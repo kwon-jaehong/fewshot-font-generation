@@ -10,7 +10,7 @@ from itertools import chain
 from sconf import Config
 from PIL import Image
 import random
-
+import cv2
 import torch
 from torchvision import transforms
 
@@ -156,7 +156,9 @@ def infer_LF(gen, save_dir, source_path, source_ext, gen_chars, key_ref_dict, lo
         return primal_ids
 
     key_gen_dict = {k: gen_chars for k in key_ref_dict}
-
+    
+    ## {'UhBee_charming': '좋은하루되세요', 'UhBee_HanByeol': '좋은하루되세요'}
+    
     outs = {}
 
     for key, gchars in key_gen_dict.items():
@@ -166,36 +168,65 @@ def infer_LF(gen, save_dir, source_path, source_ext, gen_chars, key_ref_dict, lo
         ref_imgs = torch.stack([TRANSFORM(load_img(key, c)) for c in ref_chars])
         ref_batches = torch.split(ref_imgs, batch_size)
         ref_chars = [ref_chars[i:i+batch_size] for i in range(0, len(ref_chars), batch_size)]
-
+        # ref_chars = [['값', '넋', '닻', '볘', '츄', '퀭', '핥', '훟']]
+        
         style_facts = {}
         for batch, rchars in zip(ref_batches, ref_chars):
+            
+            
+            ## 참조 문자열을 인코딩함
+            ## rchars = ['값', '넋', '닻', '볘', '츄', '퀭', '핥', '훟']
             decs = [decompose(c) for c in rchars]
-
+            ## decs = [[0, 14, 5, 6], [1, 16, 0, 6], [2, 14, 9], [5, 17, 23], [9, 21], [10, 20, 16, 23, 7], [13, 14, 3, 11], [13, 20, 13]] 
             dec_lens = torch.LongTensor([len(dec) for dec in decs])
             decs = torch.LongTensor(list(chain(*decs))).cuda()
+            ## decs = tensor([ 0, 14,  5,  6,  1, 16,  0,  6,  2, 14,  9,  5, 17, 23,  9, 21, 10, 20,16, 23,  7, 13, 14,  3, 11, 13, 20, 13], device='cuda:0')
             batch = batch.repeat_interleave(dec_lens, dim=0).cuda()
-
             facts = gen.factorize(gen.encode(batch, decs))
-
+            ## facts = {'last': {'style': tensor([[[[[ 2.7270e...ackward0>), 'comp': tensor([[[[[-1.2478,...ackward0>)}, 'skip': {'style': tensor([[[[[-1.1777e...ackward0>), 'comp': tensor([[[[[-3.8455e...ackward0>)}}
+            
+            
+        ## gen의 참조 문자열 참고해서 facts 가져옴
             for _k in facts:
                 style_facts.setdefault(_k, {})
                 for _l, _w in facts[_k].items():
                     style_facts[_k].setdefault(_l, []).append(_w)
-
         style_facts = {_k: {_l: torch.cat(_w).mean(0, keepdim=True) for _l, _w in style_facts[_k].items()}
                        for _k in style_facts}
 
+        # style_facts = {'last': {'style': tensor([[[[[ 0.2716,...ackward1>), 'comp': tensor([[[[[-1.2478,...ackward1>)}, 'skip': {'style': tensor([[[[[-1.1663e...ackward1>), 'comp': tensor([[[[[-3.7973e...ackward1>)}}
         for char in gchars:
+            # gchars  = '좋은하루되세요'
+            # char = 요
+            # source_dec = tensor([ 7, 19], device='cuda:0')
+            # source_img = torch.Size([2, 1, 128, 128])
+            # source_img 이미지를 찍어보면 '요' 고딕체로 2장? 있음
+            
+              
             source_dec = torch.LongTensor(decompose(char)).cuda()
             source_img = torch.stack([TRANSFORM(read_source(char))] * len(source_dec)).cuda()
             char_facts = gen.factorize(gen.encode(source_img, source_dec))
+            
+            # gen_feats {'last': tensor([[[[-3.4671, ...ackward1>), 'skip': tensor([[[[1.5959e+0...ackward1>)}
+            # gen_feats = torch.Size([1, 256, 16, 16])
+            
             gen_feats = gen.defactorize(style_facts, char_facts)
             out = gen.decode(gen_feats, source_img[0])[0].detach().cpu()
+            
+            # out = torch.Size([1, 128, 128])
+            
             if return_img:
                 outs.setdefault(key, []).append(out)
 
             path = save_dir / key / f"{char}.png"
             save_tensor_to_image(out, path)
+            
+        # temp = source_img.detach().cpu().numpy()
+        # temp = temp.transpose(0,2,3,1)
+        # temp = temp*255
+        # b_img,_,_,_ = temp.shape
+        # for i in range(0,b_img):
+        #     cv2.imwrite("./Tr/a_"+str(i)+".png",temp[i,:,:,:])
 
     return outs
 

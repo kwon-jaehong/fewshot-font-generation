@@ -1,3 +1,8 @@
+봐야할것 분해 모듈 -> CBAM
+
+
+------------------
+
 # FFG-benchmarks
 
 This repository provides an unified frameworks to train and test the state-of-the-art few-shot font generation (FFG) models.
