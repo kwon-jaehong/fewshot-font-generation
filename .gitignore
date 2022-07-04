@@ -6,3 +6,4 @@ temp2/*
 .vscode/*
 *.onnx*
 *.pth*
+*.vscode*

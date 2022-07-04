@@ -58,6 +58,8 @@ class LF1TrainDataset(BaseTrainDataset):
 
         return imgs, picked_chars, picked_comp_ids
 
+
+    #사용 가능한 조합 얻기
     def get_available_combinations(self, avail_chars, style_comp_ids):
         seen_comps = list(set(chain(*style_comp_ids)))
         seen_binary = np.zeros(self.n_primals)
@@ -247,6 +249,7 @@ class LF1TestDataset(BaseDataset):
     def __len__(self):
         return len(self.gen_data_list)
 
+    ## 객체를 만들지 않아도 함수 실행 할 수 있는 
     @staticmethod
     def collate_fn(batch):
         _ret = {}
