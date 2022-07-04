@@ -1,6 +1,13 @@
 봐야할것 분해 모듈 -> CBAM
 
 
+----------------------
+docker 에서 실행할 경우...
+https://curioso365.tistory.com/136
+
+--ipc=host 옵션 꼭 붙여 줄것
+
+
 ------------------
 
 # FFG-benchmarks

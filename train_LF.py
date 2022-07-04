@@ -207,6 +207,10 @@ def main():
     np.random.seed(cfg.seed)
     torch.manual_seed(cfg.seed)
 
+    # print("DDP!",cfg.use_ddp)
+    
+    
+    ## -g 플래그 넣는 순간 ddp로 됨
     if cfg.use_ddp:
         mp.spawn(train_ddp,
                  nprocs=args.gpus_per_node,

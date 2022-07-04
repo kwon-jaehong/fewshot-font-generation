@@ -1,6 +1,7 @@
-opencv-python
-pillow
-tqdm
+# pkg-resources==0.0.0
+# opencv-python
+# pillow
+# tqdm
 jsonlib-python3
 msgpack>=1.0.0
 sconf
@@ -9,5 +10,5 @@ scikit-image
 fonttools
 adamp
 lpips
-tensorboardX
 tensorboard
+tensorboardX

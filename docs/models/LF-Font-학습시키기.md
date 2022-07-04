@@ -5,6 +5,9 @@ python train_LF.py cfgs/LF/p1/train.yaml cfgs/data/train/custom.yaml --phase 1 -
 
 python train_LF.py cfgs/LF/p1/train.yaml kor_train/kor_train.yaml --phase 1 --work_dir ./temp/outputs
 
+## 멀티 GPU일때...
+python3.7 train_LF.py cfgs/LF/p1/train.yaml kor_train/kor_train.yaml --phase 1 -g 2 --work_dir ./temp/outputs
+
 ```
 
 학습할때 cfgs/LF/p1/train.yaml는 자연스럽게 default 참조함
