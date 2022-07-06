@@ -7,3 +7,4 @@ temp2/*
 *.onnx*
 *.pth*
 *.vscode*
+runs/

@@ -1,9 +1,13 @@
 봐야할것 분해 모듈 -> CBAM
 
+바닐라 GAN 
+
 
 ----------------------
 docker 에서 실행할 경우...
 https://curioso365.tistory.com/136
+
+docker run -it -d --gpus all --ipc=host -v /home/mrjaehong:/data -p 10000:10000 -p 10001:10001 lffont:0.3
 
 --ipc=host 옵션 꼭 붙여 줄것
 
