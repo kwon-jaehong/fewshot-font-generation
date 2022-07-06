@@ -8,3 +8,4 @@ temp2/*
 *.pth*
 *.vscode*
 runs/
+font_data/
