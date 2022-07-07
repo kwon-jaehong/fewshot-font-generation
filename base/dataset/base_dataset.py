@@ -44,6 +44,7 @@ class BaseDataset(Dataset):
     def render_from_ttf(self, key, char):
         font = self.key_font_dict[key]
         img = render(font, char)
+        # print(type(img)) # 필로우 이미지
         img = self.transform(img)
         return img
 

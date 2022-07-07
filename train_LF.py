@@ -86,10 +86,13 @@ def build_trainer(args, cfg, gpu=0):
 
     TrainDataset, TestDataset, Trainer = PHASE_DICT[args.phase]
 
+
+    ## 페이즈1 데이터셋 생성.py
     trn_dset = TrainDataset(
         transform=TRANSFORM,
         **cfg.dset.train
     )
+
 
     if cfg.use_ddp:
         sampler = DistributedSampler(trn_dset,
@@ -208,12 +211,12 @@ def main():
     torch.manual_seed(cfg.seed)
 
     # print("DDP!",cfg.use_ddp)
-    
+
     
     ## -g 플래그 넣는 순간 ddp로 됨
     if cfg.use_ddp:
         mp.spawn(train_ddp,
-                 nprocs=args.gpus_per_node,
+                 nprocs=2,
                  args=(args, cfg)
                  )
     else:

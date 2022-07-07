@@ -13,7 +13,7 @@ import torch
 
 from base.dataset import BaseTrainDataset, BaseDataset, sample, render, read_font
 
-
+# 페이즈1 데이터셋은 베이스 트레인을 상속받음 BaseTrainDataset
 class LF1TrainDataset(BaseTrainDataset):
     def __init__(self, data_dir, primals, decomposition, source_path, source_ext, chars, transform=None,
                  n_in_s=3, n_in_min=1, n_in_max=10, extension="png"):
@@ -55,7 +55,6 @@ class LF1TrainDataset(BaseTrainDataset):
         picked_comp_ids = [self.decompose_to_ids(c) for c in picked_chars]
 
         imgs = torch.cat([self.get_img(key, c) for c in picked_chars])
-
         return imgs, picked_chars, picked_comp_ids
 
 

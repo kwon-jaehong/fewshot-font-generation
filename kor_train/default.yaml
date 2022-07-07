@@ -42,7 +42,7 @@ gen:
 dset:
   loader:
     batch_size: 1
-    num_workers: 8
+    num_workers: 0
   train:
     n_in_s: 3
     n_in_min: 3

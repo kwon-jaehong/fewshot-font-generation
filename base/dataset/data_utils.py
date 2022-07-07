@@ -92,6 +92,8 @@ def load_ttf_data_from_single_dir(data_dir, char_filter=None, extension="ttf", n
     for font_path in font_paths:
         key = font_path.stem
 
+        
+        ## 텍스트 파일 읽음
         with open(str(font_path).replace(f".{extension}", ".txt"), encoding="utf-8") as f:
             chars = f.read()
         if char_filter is not None:
