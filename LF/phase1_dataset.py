@@ -22,6 +22,8 @@ class LF1TrainDataset(BaseTrainDataset):
         self.primals = primals
         self.decomposition = decomposition
 
+        
+        ## 소스 형태는? ttf
         self.source_ext = source_ext
         if self.source_ext == "ttf":
             self.source = read_font(source_path)
@@ -30,7 +32,12 @@ class LF1TrainDataset(BaseTrainDataset):
             self.source = Path(source_path)
             self.read_source = self.read_source_img
 
+    
+        ## 이건 모르겟음
+        
+        ## 스타일 참조 몇개할래? 3개가 기본
         self.n_in_s = n_in_s
+        
         self.n_in_min = n_in_min
         self.n_in_max = n_in_max
         self.n_primals = len(self.primals)
@@ -94,8 +101,15 @@ class LF1TrainDataset(BaseTrainDataset):
 
         while True:
             (style_imgs, style_chars, style_decs) = self.sample_style(key, n_sample=self.n_in_s)
+            # style_imgs = torch.Size([3, 128, 128])
+            # style_chars = ['갯', '졈', '팜']
+            # style_decs = [tensor([ 0, 14, 23,  6]), tensor([ 8, 17,  4]), tensor([12, 14,  4])]
 
+            
+            ## 이 폰트체에서 쓸수 있는 글자
             avail_chars = set(self.key_char_dict[key]) - set(style_chars)
+            
+            
             trg_chars, trg_decs = self.get_available_combinations(avail_chars, style_decs)
             trg_chars, trg_decs = self.check_and_sample(trg_chars, trg_decs)
             if trg_chars is None:

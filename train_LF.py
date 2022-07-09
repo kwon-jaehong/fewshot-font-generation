@@ -81,7 +81,7 @@ def build_trainer(args, cfg, gpu=0):
     image_scale = 0.5
 
     writer = TBDiskWriter(tb_path, image_path, scale=image_scale)
-
+    
     logger.info(f"[{gpu}] Get dataset ...")
 
     TrainDataset, TestDataset, Trainer = PHASE_DICT[args.phase]
@@ -216,7 +216,7 @@ def main():
     ## -g 플래그 넣는 순간 ddp로 됨
     if cfg.use_ddp:
         mp.spawn(train_ddp,
-                 nprocs=2,
+                 nprocs=args.gpus_per_node,
                  args=(args, cfg)
                  )
     else:

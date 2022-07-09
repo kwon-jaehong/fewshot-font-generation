@@ -20,6 +20,7 @@ class BaseDataset(Dataset):
             raise TypeError(f"The type of data_dirs is invalid: {type(data_dirs)}")
 
         self.use_ttf = (extension == "ttf")
+        # self.use_ttf = False
         if self.use_ttf:
             self.load_ttf_data(chars, extension, n_font)
         else:
@@ -37,12 +38,17 @@ class BaseDataset(Dataset):
         self.get_img = self.render_from_ttf
 
     def load_img_data(self, chars, extension, n_font):
+        extension = "png"
         self.key_dir_dict, self.key_char_dict = load_img_data(self.data_dirs, char_filter=chars, extension=extension, n_font=n_font)
         self.extension = extension
         self.get_img = self.load_img
 
     def render_from_ttf(self, key, char):
+        # print(key)
         font = self.key_font_dict[key]
+        
+        # print(font.size)
+        
         img = render(font, char)
         # print(type(img)) # 필로우 이미지
         img = self.transform(img)

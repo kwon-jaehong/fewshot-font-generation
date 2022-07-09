@@ -71,14 +71,14 @@ class LF1Trainer(BaseTrainer):
             ## tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], device='cuda:0')
             
             
-            ## decom포넌트 
-            with open('./data/kor/primals.json') as f:
-                primals_dict = json.load(f)
-            ## 삭제해도 됨
-            ## decom포넌트 
-            with open('./data/kor/decomposition.json') as f:
-                decomposition = json.load(f)
-            ## 삭제해도 됨
+            # ## decom포넌트 
+            # with open('./data/kor/primals.json') as f:
+            #     primals_dict = json.load(f)
+            # ## 삭제해도 됨
+            # ## decom포넌트 
+            # with open('./data/kor/decomposition.json') as f:
+            #     decomposition = json.load(f)
+            # ## 삭제해도 됨
             
             ## ref_decs는 뜻을 모르겠음            
 
@@ -98,30 +98,31 @@ class LF1Trainer(BaseTrainer):
             
             
             
-            ## 디버깅 용도를 위한 래퍼 이미지 저장
-            temp = ref_imgs.detach().cpu().numpy()
-            temp = temp.transpose(0,2,3,1)
-            temp = temp*255
-            b_img,_,_,_ = temp.shape
-            for i in range(0,b_img):
-                cv2.imwrite("./Tr/ref_"+str(i)+".png",temp[i,:,:,:])
-            ## 삭제 해도 됨
-            ## 디버깅 용도를 위한 래퍼 이미지 저장
-            temp = trg_imgs.detach().cpu().numpy()
-            temp = temp.transpose(0,2,3,1)
-            temp = temp*255
-            b_img,_,_,_ = temp.shape
-            for i in range(0,b_img):
-                cv2.imwrite("./Tr/target_"+str(i)+".png",temp[i,:,:,:])
-            ## 삭제 해도 됨   
-            ## 디버깅 용도를 위한 래퍼 이미지 저장
-            temp = src_imgs.detach().cpu().numpy()
-            temp = temp.transpose(0,2,3,1)
-            temp = temp*255
-            b_img,_,_,_ = temp.shape
-            for i in range(0,b_img):
-                cv2.imwrite("./Tr/src_"+str(i)+".png",temp[i,:,:,:])
-            ## 삭제 해도 됨   
+            # ## 디버깅 용도를 위한 래퍼 이미지 저장
+            # temp = ref_imgs.detach().cpu().numpy()
+            # temp = temp.transpose(0,2,3,1)
+            # temp = temp*255
+            # b_img,_,_,_ = temp.shape
+            # for i in range(0,b_img):
+            #     cv2.imwrite("./Tr/ref_"+str(i)+".png",temp[i,:,:,:])
+            # ## 삭제 해도 됨
+            # ## 디버깅 용도를 위한 래퍼 이미지 저장
+            # temp = trg_imgs.detach().cpu().numpy()
+            # temp = temp.transpose(0,2,3,1)
+            # temp = temp*255
+            # b_img,_,_,_ = temp.shape
+            # for i in range(0,b_img):
+            #     cv2.imwrite("./Tr/target_"+str(i)+".png",temp[i,:,:,:])
+            
+            # ## 삭제 해도 됨   
+            # ## 디버깅 용도를 위한 래퍼 이미지 저장
+            # temp = src_imgs.detach().cpu().numpy()
+            # temp = temp.transpose(0,2,3,1)
+            # temp = temp*255
+            # b_img,_,_,_ = temp.shape
+            # for i in range(0,b_img):
+            #     cv2.imwrite("./Tr/src_"+str(i)+".png",temp[i,:,:,:])
+            # ## 삭제 해도 됨   
             
             
             
