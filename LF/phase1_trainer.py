@@ -147,10 +147,16 @@ class LF1Trainer(BaseTrainer):
             ## torch.Size([44, 256, 16, 16])
             ## 참조 이미지를 인코더함            
             sc_feats = self.gen.encode_write_comb(ref_fids, ref_decs, ref_imgs)
+            ## 소스이미지 특징
             
-
-            ## torch.Size([20, 1, 128, 128])
+            
+            
             gen_imgs = self.gen.read_decode(trg_fids, trg_decs, src_imgs, phase="comb")
+            # 타겟의 폰트 아이디, 타겟의 문자 컴포넌트, 소스이미를 가지고
+            # 일단 한번 제너레이션을 한번 해보겠다는 뜻임
+            # trg_decs = torch.Size([5, 1, 128, 128])
+            # [[4, 14, 1], [0, 16, 0], [0, 0, 14, 0, 0], [5, 16], [5, 5, 14, 23]]
+            
             
 
             ## self.cfg['fm_layers'] = 'all'로 되어있음
@@ -158,28 +164,33 @@ class LF1Trainer(BaseTrainer):
             real_font, real_uni, *real_feats = self.disc(
                 trg_imgs, trg_fids, trg_cids, out_feats=self.cfg['fm_layers']
             )
-
-
-            ## 모델 저장
-            # import torch.onnx
-            # torch.onnx.export(self.disc,(trg_imgs, trg_fids, trg_cids, self.cfg['fm_layers']),'./temp.onnx',export_params=True,opset_version=12)
+            # 판별자에서 나온 결과물
+            # real_font = torch.Size([5, 1, 1, 1]) 폰트 종류 임베딩 숫자 들어있음
+            # real_uni = 이글자가 무엇인지 임베딩 벡터            
+            # real_feats = 판별자의 아키텍쳐(CNN,레즈블럭)에서 나온 값(특징들)
             
             
+            
+            
+
+
             ## 생성된 이미지를 넣고 결과를 받음
             fake_font, fake_uni = self.disc(gen_imgs.detach(), trg_fids, trg_cids)
-            # fake_font = torch.Size([20, 1, 1, 1])
-            # fake_uni.shape = torch.Size([20, 1, 1, 1])
+            # fake_font = 만들어진 이미지가 어느 폰트에 속하는지 
+            # fake_uni = 만들어진 이미지가 어느 글자에 속하는지의 결과값
             
             
             ## 진짜 이미지,가짜 이미지를 넣은 결과값들의 loss를 add함
+            ## 제너레이터와, 판별자간의 loss를 구함 (l1 loss)
             self.add_gan_d_loss([real_font, real_uni], [fake_font, fake_uni])
-            
             
             ## 판별자 백워드
             self.d_optim.zero_grad()
+            ## 제너레이터 얼리고 백워드 수행
             self.d_backward()
             self.d_optim.step()
 
+            
             
             
             
@@ -188,10 +199,16 @@ class LF1Trainer(BaseTrainer):
             fake_font, fake_uni, *fake_feats = self.disc(
                 gen_imgs, trg_fids, trg_cids, out_feats=self.cfg['fm_layers']
             )
+            
+            
+            ## 평균
             self.add_gan_g_loss(fake_font, fake_uni)
 
-            ## F1 평균 loss L1
+            
+            # FM 모듈도 L1 로스사용
             self.add_fm_loss(real_feats, fake_feats)
+            
+            
 
             def racc(x):
                 return (x > 0.).float().mean().item()
@@ -211,10 +228,15 @@ class LF1Trainer(BaseTrainer):
                 'fake_uni_acc': facc(fake_uni)
             }, B)
 
+            
+            ## 생성과 타겟이미지간의 loss
             self.add_pixel_loss(gen_imgs, trg_imgs)
 
+            
             self.g_optim.zero_grad()
 
+            
+            ## acu_clf보조 네트워크 여기서 사용
             self.add_ac_losses_and_update_stats(
                 sc_feats, ref_decs, gen_imgs, trg_decs, stats
             )
@@ -285,13 +307,23 @@ class LF1Trainer(BaseTrainer):
         self.logger.info("Iteration finished.")
 
     def infer_ac(self, sc_feats, comp_ids):
+        ## 컴포넌트를 예측하는 -> 보조 분류기
+        ## 정답 comp_ids tensor([ 2, 14, 23,  0,  3, 16,  6,  6, 12, 20,  6], device='cuda:0')
+        ## aux_out = torch.Size([11, 24])
+        
         aux_out = self.aux_clf(sc_feats)
         loss = F.cross_entropy(aux_out, comp_ids)
         acc = utils.accuracy(aux_out, comp_ids)
         return loss, acc
 
     def add_ac_losses_and_update_stats(self, in_sc_feats, in_decs, gen_imgs, trg_decs, stats):
+        
+        ## 
+        # torch.Size([11, 256, 16, 16])
+        
         loss, acc = self.infer_ac(in_sc_feats, in_decs)
+        
+        
         self.ac_losses['ac'] = loss * self.cfg['ac_w']
         stats.ac_acc.update(acc, in_decs.numel())
 
@@ -311,3 +343,8 @@ class LF1Trainer(BaseTrainer):
             f"Step {self.step:7d}\n"
             f"{'|D':<12} {L.disc.avg:7.3f} {'|G':<12} {L.gen.avg:7.3f} {'|FM':<12} {L.fm.avg:7.3f} {'|R_font':<12} {D.real_font_acc.avg:7.3f} {'|F_font':<12} {D.fake_font_acc.avg:7.3f} {'|R_uni':<12} {D.real_uni_acc.avg:7.3f} {'|F_uni':<12} {D.fake_uni_acc.avg:7.3f}\n"
         )
+
+## 모델 저장
+# import torch.onnx
+# torch.onnx.export(self.disc,(trg_imgs, trg_fids, trg_cids, self.cfg['fm_layers']),'./temp.onnx',export_params=True,opset_version=12)
+

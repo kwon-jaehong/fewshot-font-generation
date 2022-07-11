@@ -23,17 +23,16 @@ class Generator(nn.Module):
         
         # print("인코더 모델",self.comp_enc)
         
-        
+
         self.feat_shape = self.comp_enc.get_feat_shape()
         # print("피쳐 쉐이프",self.feat_shape)
         # 피쳐 쉐이프 {'last': (256, 16, 16), 'skip': (128, 32, 32)}
         
         ## self.memory
         self.memory = {k: Memory() for k in self.feat_shape}
-        
-        
         # print(self.memory)
         ## {'last': Memory(), 'skip': Memory()}
+        
 
 
         if emb_dim:

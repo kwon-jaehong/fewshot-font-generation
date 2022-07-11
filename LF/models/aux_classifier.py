@@ -13,6 +13,10 @@ class AuxClassifier(nn.Module):
         super().__init__()
         ResBlk = partial(ResBlock, norm="in", activ="relu", pad_type="zero", dropout=0.3)
         
+        # (256, 16, 16)
+        
+        # num_c = 24
+        
         C = in_shape[0]
         self.layers = nn.Sequential(
             ResBlk(C, C*2, 3, 1, downsample=True),

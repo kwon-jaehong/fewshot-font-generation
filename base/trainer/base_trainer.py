@@ -139,6 +139,9 @@ class BaseTrainer:
         return loss
 
     def add_gan_d_loss(self, reals, fakes):
+        # real = [tensor([[[[0.0190]]]...ackward0>), tensor([[[[-0.0058]]...ackward0>)]
+        # fake = [tensor([[[[0.0049]]]...ackward0>), tensor([[[[-0.0034]]...ackward0>)]
+                        
         loss = self.add_loss(
             (reals, fakes), self.d_losses, "disc", self.cfg["gan_w"], d_crit
         )
@@ -158,8 +161,10 @@ class BaseTrainer:
             d_loss.backward()
 
     def g_backward(self):
+        # disc를 프리즈하고 제너레이터만 백워드
         with utils.temporary_freeze(self.disc):
             g_loss = sum(self.g_losses.values())
+            # {'gen': tensor(-0.2325, devi...ackward0>), 'fm': tensor(0.2031, devic...ackward0>), 'pixel': tensor(0.1012, devic...ackward0>)}
             g_loss.backward()
 
     def ac_backward(self):

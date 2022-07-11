@@ -55,6 +55,12 @@ class Discriminator(nn.Module):
             nn.AdaptiveAvgPool2d(1)
         )
         self.projD = ProjectionDiscriminator(C*16, n_fonts, n_chars, w_norm="spectral")
+        # ProjectionDiscriminator(
+        # (activ): Identity()
+        # (font_emb): Embedding(1393, 512)
+        # (char_emb): Embedding(2203, 512)
+        # )
+        # 폰트와, 문자를 임베딩 연산
 
     def forward(self, x, font_indice, char_indice, out_feats='none'):
         assert out_feats in {'none', 'all'}
@@ -64,8 +70,13 @@ class Discriminator(nn.Module):
             feats.append(x)
 
         x = self.gap(x)  # final features
+        
         ret = self.projD(x, font_indice, char_indice)
-
+        # ret = [tensor([[[[0.0203]]]...ackward0>), tensor([[[[ 0.0043]]...ackward0>)]
+        # projd값은 폰트,문자 라벨값을 리턴함
+        
+        
+        ## out_feats = 판별자에서 컨브블럭,레즈블럭에서 나온 특징들을 모두 가져옴
         if out_feats == 'all':
             ret += feats
 

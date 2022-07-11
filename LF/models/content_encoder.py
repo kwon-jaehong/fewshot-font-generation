@@ -23,6 +23,7 @@ class ContentEncoder(nn.Module):
         )
 
     def forward(self, x):
+        # 차원의 데이터를 반복한다  https://seducinghyeok.tistory.com/9
         x = x.repeat((1, 1, 1, 1))
         out = self.net(x)
 

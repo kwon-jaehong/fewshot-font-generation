@@ -10,6 +10,11 @@ G에 마지막에 than h 쓰는 이유는?
 
 ACGAN 봐야함애
 
+
+네이버
+https://tv.naver.com/v/16969155
+
+
 ----------------------
 docker 에서 실행할 경우...
 https://curioso365.tistory.com/136

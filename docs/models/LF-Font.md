@@ -4,7 +4,12 @@
 You can set these values by giving command-line arguments like argparse, not modifying this configuration file directly.
 For the detailed description, please refer [here](https://github.com/khanrc/sconf#cli-modification).
 
+config 파일이 2개임
+1. 데이터
+2. 모델관련 파라미터
+
 LFfont는 페이즈1 페이즈2 학습을 진행함 ( 학습 스테이지가 2개임 )
+
 
 ---
 - **use_ddp**:  Whether to use DataDistributedParallel. Set True to this to use multi-gpu.
