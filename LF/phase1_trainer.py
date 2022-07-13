@@ -64,55 +64,68 @@ class LF1Trainer(BaseTrainer):
 
 
 
-            ref_imgs = batch["ref_imgs"].cuda()            
+            ## primals 
+            with open('./data/kor/primals.json') as f:
+                primals_dict = json.load(f)
+            ## 삭제해도 됨
+            ## decom포넌트 
+            with open('./data/kor/train_chars.json') as f:
+                train_chars = json.load(f)
+            ## 삭제해도 됨
+            
+            ## 텐서이미지
+            ref_imgs = batch["ref_imgs"].cuda()
+            ## ref_fids는 폰트 아이디
             ref_fids = batch["ref_fids"].cuda()
+            ## 문자열 분해 번호를 일렬로 나열
             ref_decs = batch["ref_decs"].cuda()
-            ## ref_fids는 폰트 레이블 
-            ## tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], device='cuda:0')
+            # primals_dict를 일렬로 나열
+            # 땟텬림이면
+            # 2 ㄷ , 2 ㄷ , 14 ㅏ , 23 ㅣ, 6 ㅅ
+            # 11 ㅌ , 17 ㅕ, 1 ㄴ
+            # 3 ㄹ , 23 ㅣ, 4 ㅁ
+            # tensor([ 2,  2, 14, 23,  6, 11, 17,  1,  3, 23,  4], device='cuda:0')
             
-            
-            # ## decom포넌트 
-            # with open('./data/kor/primals.json') as f:
-            #     primals_dict = json.load(f)
-            # ## 삭제해도 됨
-            # ## decom포넌트 
-            # with open('./data/kor/decomposition.json') as f:
-            #     decomposition = json.load(f)
-            # ## 삭제해도 됨
-            
-            ## ref_decs는 뜻을 모르겠음            
-
-            trg_imgs = batch["trg_imgs"].cuda()
-            trg_fids = batch["trg_fids"].cuda()            
-            ## trg_cids는 캐릭터 아이디
-            trg_cids = batch["trg_cids"].cuda()            
-            ## trg_decs는 primals를 참조함
-            trg_decs = batch["trg_decs"]            
-            src_imgs = batch["src_imgs"].cuda()
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            # ## 디버깅 용도를 위한 래퍼 이미지 저장
+            ## 디버깅 용도를 위한 래퍼 이미지 저장
             # temp = ref_imgs.detach().cpu().numpy()
             # temp = temp.transpose(0,2,3,1)
             # temp = temp*255
             # b_img,_,_,_ = temp.shape
             # for i in range(0,b_img):
             #     cv2.imwrite("./Tr/ref_"+str(i)+".png",temp[i,:,:,:])
-            # ## 삭제 해도 됨
-            # ## 디버깅 용도를 위한 래퍼 이미지 저장
-            # temp = trg_imgs.detach().cpu().numpy()
-            # temp = temp.transpose(0,2,3,1)
-            # temp = temp*255
-            # b_img,_,_,_ = temp.shape
-            # for i in range(0,b_img):
-            #     cv2.imwrite("./Tr/target_"+str(i)+".png",temp[i,:,:,:])
+            ## 삭제 해도 됨
+            
+            
+
+                        
+        
+            trg_imgs = batch["trg_imgs"].cuda()
+            trg_fids = batch["trg_fids"].cuda()            
+            ## trg_cids는 캐릭터 아이디 -> train_chars.json을 참조함
+            trg_cids = batch["trg_cids"].cuda()     
+            ## trg_decs는 primals.json를 참조함
+            trg_decs = batch["trg_decs"]            
+            src_imgs = batch["src_imgs"].cuda()
+            
+            
+            # list(decomposition.keys())[655]
+            
+            ## 디버깅 용도를 위한 래퍼 이미지 저장
+            temp = trg_imgs.detach().cpu().numpy()
+            temp = temp.transpose(0,2,3,1)
+            temp = temp*255
+            b_img,_,_,_ = temp.shape
+            for i in range(0,b_img):
+                cv2.imwrite("./Tr/target_"+str(i)+".png",temp[i,:,:,:])
+            
+            
+            
+            
+            
+            
+            
+            
+
             
             # ## 삭제 해도 됨   
             # ## 디버깅 용도를 위한 래퍼 이미지 저장
@@ -146,8 +159,9 @@ class LF1Trainer(BaseTrainer):
             ## sc_feats
             ## torch.Size([44, 256, 16, 16])
             ## 참조 이미지를 인코더함            
+            ## 참조이미지의 스타일별 임베딩 벡터를 가져옴
             sc_feats = self.gen.encode_write_comb(ref_fids, ref_decs, ref_imgs)
-            ## 소스이미지 특징
+            
             
             
             
@@ -169,9 +183,7 @@ class LF1Trainer(BaseTrainer):
             # real_uni = 이글자가 무엇인지 임베딩 벡터            
             # real_feats = 판별자의 아키텍쳐(CNN,레즈블럭)에서 나온 값(특징들)
             
-            
-            
-            
+
 
 
             ## 생성된 이미지를 넣고 결과를 받음

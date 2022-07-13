@@ -16,5 +16,8 @@ python3.7 train_LF.py cfgs/LF/p1/train.yaml kor_train/kor_train.yaml --phase 1 -
 ```
 python train_LF.py cfgs/LF/p2/train.yaml cfgs/data/train/custom.yaml --resume temp/outputs/checkpoints/last.pth --phase 2 --work_dir temp/outputs2
 
-python train_LF.py cfgs/LF/p2/train.yaml kor_train/kor_train.yaml --resume temp/outputs/checkpoints/last.pth --phase 2 --work_dir temp/outputs2
+python3.7 train_LF.py cfgs/LF/p2/train.yaml kor_train/kor_train.yaml --resume ./2700.pth --phase 2 --work_dir temp/outputs2
+
+python3.7 train_LF.py cfgs/LF/p2/train.yaml kor_train/kor_train.yaml --resume temp/outputs/checkpoints/285000.pth --phase 4 --work_dir temp/outputs2
+
 ```

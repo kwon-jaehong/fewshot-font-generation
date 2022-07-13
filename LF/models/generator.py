@@ -136,12 +136,17 @@ class Generator(nn.Module):
 
     def read_decode(self, fids, decs, src_imgs, reset_memory=True,
                     reduction='mean', phase="fact", try_comb=False):
-
+        # fids tensor([949, 949, 949, 949, 949], device='cuda:0')
+        
+        # decs [[0, 0, 14, 23], [5, 5, 16], [0, 20, 16, 1], [1, 22, 3, 0], [0, 23, 3, 4]]
         feats = self.read_memory(fids, decs, reset_memory, phase=phase,
                                  reduction=reduction, try_comb=try_comb)
 
+        # 
         out = self.decode(feats, src_imgs)
-
+        # out torch.Size([5, 1, 128, 128])
+        # 아웃풋은 이미지로 나옴 
+        
         if reset_memory:
             self.reset_memory()
 

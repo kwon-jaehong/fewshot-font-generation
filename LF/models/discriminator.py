@@ -73,7 +73,7 @@ class Discriminator(nn.Module):
         
         ret = self.projD(x, font_indice, char_indice)
         # ret = [tensor([[[[0.0203]]]...ackward0>), tensor([[[[ 0.0043]]...ackward0>)]
-        # projd값은 폰트,문자 라벨값을 리턴함
+        # projd값은 폰트,문자 라벨의 임베딩값을 리턴함
         
         
         ## out_feats = 판별자에서 컨브블럭,레즈블럭에서 나온 특징들을 모두 가져옴

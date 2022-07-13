@@ -9,6 +9,9 @@ import torch.nn.functional as F
 
 
 def reduce_features(feats, reduction='mean'):
+    # feats = feats[0].shape
+    # feats는 라스트, 스킵 2가지 배열로 구성
+    
     if reduction == 'mean':
         return torch.stack(feats).mean(dim=0)
     elif reduction == 'first':
@@ -38,13 +41,19 @@ class CombMemory:
                    .setdefault(comp_id.item(), []) \
                    .append(sc_feat)
 
+
     def read_point(self, style_id, comp_id, reduction='mean'):
+        # 메모리에서 피쳐를 가져옴
         style_id = int(style_id)
         comp_id = int(comp_id)
         sc_feats = self.memory[style_id][comp_id]
         return reduce_features(sc_feats, reduction)
 
+
+    ## 문자를 하나씩 처리
     def read_char(self, style_id, comp_ids, reduction='mean'):
+        # style_id tensor(949, device='cuda:0')
+        # comp_ids = [0, 0, 14, 23]
         char_feats = []
         for comp_id in comp_ids:
             comp_feat = self.read_point(style_id, comp_id, reduction)
@@ -180,6 +189,10 @@ class Memory(nn.Module):
     
     
     def read_chars(self, style_ids, comp_ids, reduction='mean', type="both"):
+        # style_ids tensor([949, 949, 949, 949, 949], device='cuda:0')
+        # comp_ids = [[0, 0, 14, 23], [5, 5, 16], [0, 20, 16, 1], [1, 22, 3, 0], [0, 23, 3, 4]]
+        
+        
         sc_feats = []
         read_funcs = {"both": self.read_char_both,
                       "comb": self.comb_memory.read_char,
